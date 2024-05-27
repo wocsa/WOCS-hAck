@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  {% if not num_formsets %}
+    <!-- If no num_formsets variable, show this form -->
+    <header class="masthead">
+      <section class="page-section" id="contact">
+        <div class="container px-4 px-lg-5">
+          <div class="row justify-content-center">
+            <div class="col-lg-10">
+              <h1 class="text-white">Add Tutorial</h1>
+              <form method="post" id="num-formset-form">
+                {% csrf_token %}
+                <label class="text-white" for="num-formsets">Enter the number of steps for your tutorial:</label>
+                <input class="form-control" type="number" name="num_formsets" id="num-formsets" min="1" style="margin-bottom: 10px" required />
+                <input class="form-control" type="submit" value="Submit" />
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </header>
+  {% else %}
+    <!-- If num_formsets variable is present, show this form -->
+    <header class="masthead">
+      <div class="d-flex flex-column justify-content-center m-5">
+        <h2 class="text-white text-center">Add Tutorial</h2>
+        <a class="btn btn-primary btn-xl" href="#form_tuto">Add Tutorial</a>
+      </div>
+    </header>
+    <section class="page-section" id="form_tuto">
+      <div class="container px-4 px-lg-5">
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+            <h1 class="text-white">Add Tutorial</h1>
+            <form method="post" enctype="multipart/form-data" id="tutorial-form">
+              {% csrf_token %}
+              <!-- Display the tutorial form -->
+              {{ tutorial_form.as_p }}
+              <!-- Display the formset management form -->
+              {{ formset.management_form }}
+              <!-- Container for dynamic formsets -->
+              <div id="formset-dynamic-container">
+                <!-- Loop through each form in the formset and display it -->
+                {% for form in formset.forms %}
+                  {{ form.as_p }}
+                {% endfor %}
+              </div>
+              <!-- Buttons for saving draft or publishing -->
+              <div class="d-flex justify-content-center">
+                <input type="submit" class="btn btn-secondary btn-xl m-1" name="save_draft" value="Save as Draft" />
+                <input type="submit" class="btn btn-secondary btn-xl m-1" name="publish" value="Publish" />
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}

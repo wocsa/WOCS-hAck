@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <header class="masthead">
+    <section class="page-section" id="contact">
+      <div class="container px-4 px-lg-5">
+        <div class="row justify-content-center">
+          <h1 class="text-white">Edit Your Profile</h1>
+          <div class="col-md-2">
+            <div class="d-flex justify-content-center">
+              <img src="{{ user_profile.profile_picture.url }}" class="img-fluid" style="width: 100px; height: 100px; border-radius: 50%;" />
+            </div>
+          </div>
+          <div class="col-md-10">
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="form-floating mb-3 d-flex justify-content-center">
+                {{ profile_form.new_email}}
+                <label for="email">New Email</label>
+              </div>
+              <div class="form-floating mb-3 d-flex justify-content-center">
+                {{ profile_form.bio}}
+                <label for="bio">Your bio</label>
+              </div>
+              <div class="form-floating mb-3 d-flex justify-content-end">
+                <span class="text-white" id="bio-char-count">0/500</span>
+              </div>
+              <div class="form-floating mb-3 d-flex justify-content-center">
+                {{ profile_form.profile_picture }}
+                <label for="profile_picture" style="padding-top: 7px;">Profile Picture</label>
+              </div>
+
+              <div class="text-center text-success mb-3 ">
+                {{ message_valid }}
+              </div>
+              <div class="text-center text-danger mb-3 >">
+                {{ message_error }}
+              </div>
+              <div class="d-flex justify-content-center">
+                <button class="btn btn-primary btn-xl" style="margin-bottom: 10px" type="submit">Save Changes</button>
+              </div>
+            </form>
+            <div class="d-flex justify-content-center">
+              <a href="{% url 'my_tutorials' %}"><button class="btn btn-secondary btn-xl m-1">My Tutorials</button></a>
+              <a href="{% url 'change_password' %}"><button class="btn btn-secondary btn-xl m-1">Change password</button></a>
+              <a href="{% url 'delete_user' %}"><button class="btn btn-secondary btn-xl m-1">Delete account</button></a>
+            </div>
+            </div>
+        </div>
+      </div>
+    </section>
+  </header>
+
+  <script>
+    document.getElementById('id_bio').addEventListener('input', function() {
+      var bio = this.value;
+      var charCount = bio.length;
+      document.getElementById('bio-char-count').innerText = charCount + "/500";
+    });
+  </script>
+{% endblock %}

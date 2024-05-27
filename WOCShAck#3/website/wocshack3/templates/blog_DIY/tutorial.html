@@ -1,0 +1,85 @@
+<!-- Extend base template -->
+{% extends 'base.html' %}
+{% load static %}
+
+<!-- Define content block -->
+{% block content %}
+  <!-- Header section -->
+  <header class="masthead">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading">
+            <!-- Tutorial title -->
+            <h1 class="text-white">{{ tutorial.title|safe }}</h1>
+            <!-- Author and creation date -->
+            <div class="d-flex justify-content-between">
+              <span class="subheading text-light">By <a class="subheading text-light" href="{% url 'profile' tutorial.author_user.profile_id %}">{{ tutorial.author_user.user.username }}</a></span>
+              <span class="subheading text-light"><small><i class="bi bi-clock"></i> {{ tutorial.creation_date }}</small></span>
+            </div>
+            <!-- Button to see the tutorial -->
+            <div class="d-flex justify-content-center mt-5">
+                <a class="btn btn-secondary btn-xl" href="#tutorial">See the tutorial</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Tutorial content section -->
+  <section class="page-section" id="tutorial">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="d-flex flex-column justify-content-center"> 
+          <!-- Loop through tutorial content -->
+          {% for content in tutorial.content_sorted %}
+          <!-- Display text content -->
+          {% if content.get_model_name == 'textcontent' %}
+            <p class="text-center mt-3">{{ content.bodyline }}</p>
+          <!-- Display picture content -->
+          {% elif content.get_model_name == 'picturecontent' %}
+            <img src="{{ content.picture.url }}" alt="Picture" class= "img-fluid"/>
+          {% endif %}
+        {% endfor %}
+        </div>
+        <!-- Comments section -->
+        <div class="d-flex align-items-baseline">
+          <h3 class="mt-5">Comments</h3>
+          <!-- Comment count -->
+          <img src="../static/assets/img/comment.png" alt="Conversation" style="width: 20px; height: 20px; margin-left: 15px; margin-top: 40px">
+          <p class="mt-100"> {{ tutorial.comment_count }}</p>
+        </div>
+
+        <!-- Display comments -->
+        <ul>
+          {% for comment in comments %}
+            <div class="comment-bubble">
+                <a href="{% url 'profile' comment.author_user.profile_id %}">
+                  <img src="{{ comment.author_user.profile_picture.url }}" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px; margin-bottom:10px " />
+                </a>
+                <a href="{% url 'profile' comment.author_user.profile_id %}">{{ comment.author_user.user.username }}</a>: {{ comment.bodyline }}
+            </div>
+          {% endfor %}
+        </ul>
+
+        <!-- Add comment form -->
+        {% if is_authenticated %}
+          <h3>Add your comment</h3>
+          <form method="post" action="{% url 'tutorial' id=tutorial.id %}">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button class="btn btn-secondary btn-xl m-1" type="submit">Submit Comment</button>
+          </form>
+        {% else %}
+          <p>
+            Please <a href="{% url 'login' %}">log in</a> to add comments.
+          </p>
+        {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

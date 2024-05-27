@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <!-- Header section -->
+  <header class="masthead">
+    <section class="page-section" id="contact">
+      <div class="container px-4 px-lg-5">
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+            <!-- Blog DIY module -->
+            <div class="app-blog_DIY module">
+              <!-- Table for displaying user profiles, tutorials, and comments -->
+              <table>
+                <caption>
+                  <!-- Link to return to dashboard -->
+                  <a href="{% url 'home' %}">Return to dashboard</a>
+                </caption>
+                <thead>
+                  <tr>
+                    <!-- Table headers -->
+                    <th class="text-white">User Profiles</th>
+                    <th class="text-white">Tutorials</th>
+                    <th class="text-white">Comments</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <!-- Loop through user profiles and display username with delete link -->
+                      {% for user_profile in user_profiles %}
+                        <p class="text-white">{{ user_profile.user.username }}</p>
+                        <a href="#" class="delete-user" data-url="{% url 'admin_delete_user' user_profile.id %}">Delete User</a><br />
+                      {% endfor %}
+                    </td>
+                    <td>
+                      <!-- Loop through tutorials and display title with delete link -->
+                      {% for tutorial in tutorials %}
+                        <p class="text-white">{{ tutorial.title }}</p>
+                        <a href="#" class="delete-tutorial" data-url="{% url 'admin_delete_tutorial' tutorial.id %}">Delete Tutorial</a><br />
+                      {% endfor %}
+                    </td>
+                    <td>
+                      <!-- Loop through comments and display bodyline with delete link -->
+                      {% for comment in comments %}
+                        <p class="text-white">{{ comment.bodyline }}</p>
+                        <a href="#" class="delete-comment" data-url="{% url 'admin_delete_comment' comment.id %}">Delete Comment</a><br />
+                      {% endfor %}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </header>
+
+  <!-- JavaScript for handling delete confirmation -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.delete-user, .delete-tutorial, .delete-comment').forEach(function (deleteLink) {
+        deleteLink.addEventListener('click', function (e) {
+          e.preventDefault()
+          // Display confirmation dialog
+          var confirmation = confirm('Are you sure you want to delete?')
+          // If user confirms, redirect to delete URL
+          if (confirmation) {
+            window.location.href = deleteLink.getAttribute('data-url')
+          }
+        })
+      })
+    })
+  </script>
+{% endblock %}
