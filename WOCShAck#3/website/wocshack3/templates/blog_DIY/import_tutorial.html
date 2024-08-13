@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <header class="masthead">
+    <section class="page-section" id="contact">
+      <div class="container px-4 px-lg-5">
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+            <h1 class="text-white">Import Tutorial</h1>
+
+            <form method="post" enctype="multipart/form-data" action="{% url 'import_tutorial' %}">
+              {% csrf_token %}
+
+              <label class="text-white" for="file">Choose XML File:</label>
+              <input type="file" name="file" required />
+                <br/><br/>
+              <button class="btn btn-primary btn-xl" type="submit">Import Tutorial</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </header>
+{% endblock %}

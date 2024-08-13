@@ -1,0 +1,23 @@
+services:
+  website:
+    build:
+      context: .
+      dockerfile: ./website/Dockerfile
+    image: website_dev_wocshack
+    container_name: website_dev_wocshack
+    hostname: website_dev_wocshack
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    networks:
+      backend:
+        ipv4_address: 10.10.10.2
+
+networks:
+  backend:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.10.0/24
+          gateway: 10.10.10.1

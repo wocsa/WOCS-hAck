@@ -1,0 +1,84 @@
+<!-- Extend base template -->
+{% extends 'base.html' %}
+{% load static %}
+
+<!-- Define content block -->
+{% block content %}
+  <!-- Header section -->
+  <header class="masthead">
+    <section class="page-section" id="contact">
+      <div class="container px-4 px-lg-5">
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+            <h1 class="text-white">Search Results</h1>
+
+            <!-- Search form -->
+            <form method="GET" action="{% url 'search_tutorial' %}">
+              <!-- Display search query if exists -->
+              {% if query %}
+                <input class="form-control" type="text" name="q" value="{{ query }}" placeholder="Search by title or creator" />
+              {% else %}
+                <input class="form-control" type="text" name="q" placeholder="Search by title or creator" />
+              {% endif %}
+              <!-- Search button -->
+              <div class="d-grid">
+                <button class="btn btn-primary btn-xl m-2" type="submit">Search</button>
+              </div>
+            </form>
+            <!-- Button to see search results -->
+            <a class="btn btn-secondary btn-xl" href="#results">See results</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </header>
+
+  <!-- Section to display search results -->
+  <section class="page-section">
+    <div class="container px-4 px-lg-5" id="results">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <!-- Display tutorials if exist -->
+          {% if tutorials %}
+            <ul>
+              {% for tutorial in tutorials %}
+              <!-- List item for each tutorial -->
+              <li class="d-flex my-1 align-items-start">
+                <div class="d-flex align-items-center flex-grow-1">
+                  <!-- Author profile picture -->
+                  <a href="{% url 'profile' tutorial.author_user.profile_id %}">
+                    <img src="{{ tutorial.author_user.profile_picture.url }}" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;" />
+                  </a>
+                  <!-- Tutorial title and link -->
+                  <a class="btn btn-outline-primary btn-height-custom-tuto" style="padding: 8px;" href="{% url 'tutorial' id=tutorial.id %}">
+                    <!-- Arrow icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"></path>
+                    </svg> {{ tutorial.title|safe }}
+                  </a>
+                  <!-- Author username -->
+                  <p class="mb-0 mr-3" style="margin-left: 5px"> by </p>
+                  <a href="{% url 'profile' tutorial.author_user.profile_id %}" class="mb-0 mr-3" style="margin-left: 5px"> {{ tutorial.author_user.user.username }}</a>
+                  <!-- Comment count -->
+                  <div class="d-flex align-items-center">
+                    <img src="../static/assets/img/comment.png" alt="Conversation" style="width: 20px; height: 20px; margin-left: 15px;">
+                    <p class="mb-0"> {{ tutorial.comment_count }}</p>
+                  </div>
+                </div>
+              </li>
+              <hr class="separator-bar">
+              {% endfor %}
+            </ul>
+          <!-- Display message if no tutorials found -->
+          {% else %}
+            {% if message %}
+              <div class="text-center text-danger mb-3">{{ message }}</div>
+            {% else %}
+              <div class="text-center text-danger mb-3">No tutorials found.</div>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
